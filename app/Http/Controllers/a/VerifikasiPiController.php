@@ -22,8 +22,9 @@ class VerifikasiPiController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:verifikasi pi-list', only : ['index','get_verifikasi_pi','show']),
+            new Middleware('permission-or-dosen:verifikasi pi-list', only : ['index','get_verifikasi_pi','show']),
             new Middleware('permission:verifikasi pi-verifikasi', only : ['verifikasi']),
+            new Middleware('deny-dosen', only : ['verifikasi']),
         ];
     }
     
@@ -45,7 +46,11 @@ class VerifikasiPiController extends Controller implements HasMiddleware
             ->where('groups.done','Y')
             ->where('groups.admin_verify','Y')
             ->orderByRaw('FIELD(done_verify, "N","Y","X")')
-            ->orderBy('groups.created_at','desc')->get();
+            ->orderBy('groups.created_at','desc');
+            if(isDosen()){
+                $data=$data->where('groups.pembimbing_id',dosenId());
+            }
+            $data=$data->get();
             $data=$data->map(function($row){
                 $mahasiswas=DB::table('group_details')->join('mahasiswas','mahasiswas.id','=','group_details.mahasiswa_id')
                 ->select('group_details.*','mahasiswas.nama','mahasiswas.nim')->where('group_id',$row->id)->get();
@@ -108,6 +113,11 @@ class VerifikasiPiController extends Controller implements HasMiddleware
         ->leftJoin('group_lokasis','groups.id','=','group_lokasis.group_id')
         ->where('groups.id',decrypt0($id))
         ->select('groups.*','lokasi_pis.lokasi_pi','lokasi_pis.alamat','lokasi_pis.kota','dosens.nama as pembimbing','dosens.nip as pembimbing_nip','group_lokasis.kompetensi','groups.nama_pembimbing_lapangan as pembimbing_lapangan','groups.jabatan_pembimbing_lapangan as pembimbing_lapangan_jabatan')->first();
+
+        if(isDosen() && (empty($groups) || $groups->pembimbing_id != dosenId())){
+            abort(403,'Anda hanya dapat melihat kelompok bimbingan anda.');
+        }
+
         $group_details=GroupDetail::join('mahasiswas','mahasiswas.id','=','group_details.mahasiswa_id')
         ->join('prodis','prodis.id','=','mahasiswas.prodi_id')
         ->where('group_details.group_id',$groups->id)

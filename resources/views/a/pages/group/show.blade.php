@@ -125,6 +125,7 @@
                             </div>
                         </div>
                     </div>
+                    @if(!isDosen())
                     <div class="col-md-7">
                         <div class="card">
                             <div class="card-body">
@@ -179,17 +180,23 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
             <div class="col-12 text-end">
-            
-                    <a href="{{route('group.edit',encrypt0($data->id))}}" class="btn icon icon-left btn-info"><i class="bi bi-pencil"></i> Edit</a>
-                    <button type="button" id="verifikasi" class="btn icon icon-left btn-primary" data-id="{{encrypt0($data->id)}}"><i class="bi bi-check"></i> Verifikasi</button>
+                    @if(isDosen())
+                        <a href="{{route('group.index')}}" class="btn icon icon-left btn-light"><i class="bi bi-arrow-left-square"></i> Kembali</a>
+                    @else
+                        <a href="{{route('group.edit',encrypt0($data->id))}}" class="btn icon icon-left btn-info"><i class="bi bi-pencil"></i> Edit</a>
+                        <button type="button" id="verifikasi" class="btn icon icon-left btn-primary" data-id="{{encrypt0($data->id)}}"><i class="bi bi-check"></i> Verifikasi</button>
+                    @endif
             </div> 
         </div>
         </form>
     </section>
 </div>
+@if(!isDosen())
 @include('u.component.modal_pembimbing')
 <script src="{{asset('app/assets/pages/group/group.js')}}?v=1.2"></script>
+@endif
 @endsection

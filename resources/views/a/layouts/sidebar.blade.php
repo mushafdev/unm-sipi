@@ -1,7 +1,21 @@
 @php
-    $groupNotif=DB::table('groups')->where('send','=','Y')->where('admin_verify','=','N')->count();
-    $doneNotif=DB::table('groups')->where('groups.done','Y')->where('groups.admin_verify','Y')->where('groups.done_verify','N')->count();
-    $laporanNotif=DB::table('groups')->where('groups.laporan','Y')->where('groups.admin_verify','Y')->where('groups.laporan_verify','N')->where('done','Y')->count();
+    $isDosen = isDosen();
+    $dosenId = dosenId();
+
+    $groupNotifQ=DB::table('groups')->where('send','=','Y')->where('admin_verify','=','N');
+    $doneNotifQ=DB::table('groups')->where('groups.done','Y')->where('groups.admin_verify','Y')->where('groups.done_verify','N');
+    $laporanNotifQ=DB::table('groups')->where('groups.laporan','Y')->where('groups.admin_verify','Y')->where('groups.laporan_verify','N')->where('done','Y');
+
+    // Dosen hanya melihat notifikasi kelompok bimbingannya
+    if($isDosen){
+        $groupNotifQ=$groupNotifQ->where('pembimbing_id',$dosenId);
+        $doneNotifQ=$doneNotifQ->where('groups.pembimbing_id',$dosenId);
+        $laporanNotifQ=$laporanNotifQ->where('groups.pembimbing_id',$dosenId);
+    }
+
+    $groupNotif=$groupNotifQ->count();
+    $doneNotif=$doneNotifQ->count();
+    $laporanNotif=$laporanNotifQ->count();
 @endphp
 <div id="sidebar">
     <div class="sidebar-wrapper active">
@@ -71,7 +85,7 @@
                 </li>
                 @endcan
 
-                @can('verifikasi pi-list')
+                @if($isDosen || Gate::allows('verifikasi pi-list'))
                 <li class="sidebar-item {{ request()->is('verifikasi-pi','verifikasi-pi/*') ? 'active' : '' }}">
                     <a href="{{route('verifikasi-pi.index')}}" class='sidebar-link'>
                         <i class="bi bi-card-checklist"></i>
@@ -81,8 +95,8 @@
                         @endif
                     </a>
                 </li>
-                @endcan
-                @can('laporan nilai-list')
+                @endif
+                @if($isDosen || Gate::allows('laporan nilai-list'))
                 <li class="sidebar-item {{ request()->is('laporan-nilai','laporan-nilai/*') ? 'active' : '' }}">
                     <a href="{{route('laporan-nilai.index')}}" class='sidebar-link'>
                         <i class="bi bi-flag-fill"></i>
@@ -92,7 +106,7 @@
                         @endif
                     </a>
                 </li>
-                @endcan
+                @endif
                 @if(Session::get('role')=='superadmin' || Session::get('role')=='admin')
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>

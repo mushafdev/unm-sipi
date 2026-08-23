@@ -25,6 +25,10 @@ class GroupController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('permission:group-verifikasi', only : ['verifikasi']),
+            new Middleware('deny-dosen', only : [
+                'create','store','edit','update','destroy','destroy_item',
+                'send','update_pl','verifikasi','verifikasi_mhs'
+            ]),
         ];
     }
     /**
@@ -49,8 +53,8 @@ class GroupController extends Controller implements HasMiddleware
             ->select('groups.*','lokasi_pis.lokasi_pi','dosens.nama as pembimbing','dosens.nip as pembimbing_nip')->where('groups.send','Y')
             ->orderByRaw('FIELD(admin_verify, "N", "Y", "X")')
             ->orderBy('groups.created_at','desc');
-            if(auth()->user()->role=='dosen'){
-                $data=$data->where('groups.pembimbing_id',$request->session()->get('detailUser')->id);
+            if(isDosen()){
+                $data=$data->where('groups.pembimbing_id',dosenId());
             }
             $data=$data->get();
             $data=$data->map(function($row){
@@ -223,6 +227,11 @@ class GroupController extends Controller implements HasMiddleware
         ->leftJoin('dosens','groups.pembimbing_id','=','dosens.id')
         ->where('groups.id',decrypt0($id))
         ->select('groups.*','lokasi_pis.lokasi_pi','lokasi_pis.alamat','lokasi_pis.kota','dosens.nama as pembimbing','dosens.nip as pembimbing_nip','groups.nama_pembimbing_lapangan as pembimbing_lapangan','groups.jabatan_pembimbing_lapangan as pembimbing_lapangan_jabatan')->first();
+
+        if(isDosen() && (empty($groups) || $groups->pembimbing_id != dosenId())){
+            abort(403,'Anda hanya dapat melihat kelompok bimbingan anda.');
+        }
+
         $group_details=GroupDetail::join('mahasiswas','mahasiswas.id','=','group_details.mahasiswa_id')
         ->join('prodis','prodis.id','=','mahasiswas.prodi_id')
         ->where('group_details.group_id',$groups->id)

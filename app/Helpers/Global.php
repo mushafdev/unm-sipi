@@ -28,6 +28,32 @@ if (! function_exists('decrypt0')) {
     }
 }
 
+if (! function_exists('isDosen')) {
+    /**
+     * Cek apakah user yang login adalah dosen.
+     */
+    function isDosen()
+    {
+        return auth()->check() && auth()->user()->role == 'dosen';
+    }
+}
+
+if (! function_exists('dosenId')) {
+    /**
+     * ID dosen (dosens.id) dari user yang sedang login. Null jika bukan dosen.
+     */
+    function dosenId()
+    {
+        if (! isDosen()) {
+            return null;
+        }
+
+        $detail = session('detailUser');
+
+        return $detail->id ?? null;
+    }
+}
+
 if (! function_exists('convertYmdToMdy')) {
     function convertYmdToMdy($date)
     {

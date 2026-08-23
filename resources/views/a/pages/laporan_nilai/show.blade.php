@@ -167,6 +167,7 @@
                             </div>
                         </div>
                     </div>
+                    @if(!isDosen())
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
@@ -199,14 +200,17 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
             <div class="col-12 text-end">
                     <a href="{{route('laporan-nilai.index')}}" class="btn icon icon-left btn-light"><i class="bi bi-arrow-left-square"></i> Kembali</a>
                                    
-                    @can('verifikasi pi-verifikasi')
-                        <button type="button" id="verifikasi" class="btn icon icon-left btn-primary" data-id="{{encrypt0($data->id)}}"><i class="bi bi-check"></i> Verifikasi</button>    
-                    @endcan
+                    @if(!isDosen())
+                        @can('verifikasi pi-verifikasi')
+                            <button type="button" id="verifikasi" class="btn icon icon-left btn-primary" data-id="{{encrypt0($data->id)}}"><i class="bi bi-check"></i> Verifikasi</button>    
+                        @endcan
+                    @endif
                     
             </div> 
         </div>
