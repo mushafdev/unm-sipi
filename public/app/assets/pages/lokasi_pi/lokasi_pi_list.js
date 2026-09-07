@@ -24,7 +24,12 @@ table = $('#table').DataTable({
     "processing": true,
     "serverSide": true,
     "stateSave": true,
-    ajax: urlList,
+    ajax: {
+        url: urlList,
+        data: function (d) {
+            d.filter_kosong = $('#filter_kosong').val();
+        }
+    },
     columns: [
     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
     {data: 'lokasi_pi', name: 'lokasi_pi'},
@@ -42,6 +47,10 @@ table = $('#table').DataTable({
     },
     ],
 
+});
+
+$('#filter_kosong').on('change', function () {
+    table.ajax.reload();
 });
 
 $(document).on( 'click', '.delete', function () {

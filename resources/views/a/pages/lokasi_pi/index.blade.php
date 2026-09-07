@@ -26,6 +26,15 @@
 
             </div>
             <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Filter Ketersediaan</label>
+                        <select id="filter_kosong" class="form-select">
+                            <option value="">Semua Lokasi</option>
+                            <option value="1">Masih Kosong (Belum ada mahasiswa PI)</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table" id="table" data-list="{{route('lokasi-pi.get_lokasi_pi')}}" data-url="{{route('lokasi-pi.index')}}">
                         <thead>

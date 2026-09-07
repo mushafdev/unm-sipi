@@ -42,8 +42,14 @@ class LokasiPiController extends Controller implements HasMiddleware
     {
         if ($request->ajax()) {
             $data = LokasiPi::select('lokasi_pis.*')
-                    ->selectRaw('(SELECT COUNT(*) FROM `groups` WHERE `groups`.lokasi_pi_id = lokasi_pis.id AND `groups`.admin_verify = "Y" AND `groups`.done_verify != "Y") as jumlah_kelompok')
-                    ->orderBy('lokasi_pis.created_at','desc')->get();
+                    ->selectRaw('(SELECT COUNT(*) FROM `groups` WHERE `groups`.lokasi_pi_id = lokasi_pis.id AND `groups`.admin_verify = "Y" AND `groups`.done_verify != "Y") as jumlah_kelompok');
+
+            // Filter lokasi yang masih kosong (belum ada mahasiswa yang PI di sana)
+            if ($request->filter_kosong == '1') {
+                $data->whereRaw('(SELECT COUNT(*) FROM `groups` WHERE `groups`.lokasi_pi_id = lokasi_pis.id AND `groups`.admin_verify = "Y") = 0');
+            }
+
+            $data = $data->orderBy('lokasi_pis.created_at','desc')->get();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){

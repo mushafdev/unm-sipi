@@ -11,6 +11,15 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-5">
+                        <label class="form-label">Filter Ketersediaan</label>
+                        <select id="filter_kosong_lokasi" class="form-select">
+                            <option value="">Semua Lokasi</option>
+                            <option value="1">Masih Kosong (Belum ada mahasiswa PI)</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table mb-0 display" data-list="{{route('lokasi-pi.get_lokasi_pi')}}" id="table-lokasi-pi">
                         <thead class="thead-dark">

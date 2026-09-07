@@ -18,7 +18,12 @@ $('.search-lokasi-pi').on('click', function() {
         "processing": true,
         "serverSide": true,
         "stateSave": true,
-        ajax: urlListLokasiPi,
+        ajax: {
+            url: urlListLokasiPi,
+            data: function (d) {
+                d.filter_kosong = $('#filter_kosong_lokasi').val();
+            }
+        },
         columns: [
         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
         {data: 'lokasi_pi', name: 'lokasi_pi'},
@@ -39,6 +44,12 @@ $('.search-lokasi-pi').on('click', function() {
 
 $('#modal-lokasi-pi').on('shown.bs.modal', function () {
     table.columns.adjust();
+});
+
+$('#filter_kosong_lokasi').on('change', function () {
+    if (table) {
+        table.ajax.reload();
+    }
 });
 
 $('#table-lokasi-pi').on('click','tr',function() {
