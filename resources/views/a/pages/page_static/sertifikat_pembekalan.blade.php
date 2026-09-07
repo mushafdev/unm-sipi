@@ -106,7 +106,7 @@
       position: absolute;
       top: 20;
       left: 0;
-      width: 250px;
+      height: 130px;
       left: 50%;
       transform: translateX(-50%);
     }
@@ -139,7 +139,7 @@
     <div class="footer">
       <p>Ketua Pengelola Unit Praktik Industri<br>
       {{$detail->jurusan}}</p>
-      <img  src="{{public_path('app/assets/static/images/ttd/ttd_sertifikat.png')}}" alt="TTD Pengelola">
+      <img  src="{{public_path('app/assets/static/images/ttd/ttd_sertifikat2.png')}}" alt="TTD Pengelola">
       <div class="signature">{{$detail->pengelola_nama}}</div>
       <p class="details">NIP. {{$detail->pengelola_nip}}</p>
     </div>

@@ -20,6 +20,7 @@
                                 <th>Kota</th>
                                 <th>Alamat</th>
                                 <th>Kompetensi</th>
+                                <th>Kelompok Sementara PI</th>
                             </tr>
                         </thead>
                         <tbody>

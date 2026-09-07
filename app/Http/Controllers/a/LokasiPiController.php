@@ -41,7 +41,9 @@ class LokasiPiController extends Controller implements HasMiddleware
     public function get_lokasi_pi(Request $request)
     {
         if ($request->ajax()) {
-            $data = LokasiPi::orderBy('lokasi_pis.created_at','desc')->get();
+            $data = LokasiPi::select('lokasi_pis.*')
+                    ->selectRaw('(SELECT COUNT(*) FROM `groups` WHERE `groups`.lokasi_pi_id = lokasi_pis.id AND `groups`.admin_verify = "Y" AND `groups`.done_verify != "Y") as jumlah_kelompok')
+                    ->orderBy('lokasi_pis.created_at','desc')->get();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -76,8 +78,11 @@ class LokasiPiController extends Controller implements HasMiddleware
                         }
                         return $result;
                     })
+                    ->addColumn('jumlah_kelompok', function($row){
+                        return '<span class="badge bg-primary">'.$row->jumlah_kelompok.' Kelompok</span>';
+                    })
 
-                    ->rawColumns(['action','aktif','kompetensi','role'])
+                    ->rawColumns(['action','aktif','kompetensi','role','jumlah_kelompok'])
                     ->make(true);
         }
     }

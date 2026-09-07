@@ -36,6 +36,7 @@
                                 <th>Alamat</th>
                                 <th>Telp.</th>
                                 <th>Kompetensi</th>
+                                <th>Kelompok Sementara PI</th>
                                 <th></th>
                             </tr>
                         </thead>

@@ -32,6 +32,7 @@ table = $('#table').DataTable({
     {data: 'alamat', name: 'alamat'},
     {data: 'telp', name: 'telp'},
     {data: 'kompetensi', name: 'kompetensi'},
+    {data: 'jumlah_kelompok', name: 'jumlah_kelompok', orderable: false, searchable: false},
     {data: 'action', name: 'action', orderable: false, searchable: false},
     ],
     "columnDefs": [

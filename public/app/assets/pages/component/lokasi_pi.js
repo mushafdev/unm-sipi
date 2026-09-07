@@ -25,6 +25,7 @@ $('.search-lokasi-pi').on('click', function() {
         {data: 'kota', name: 'kota'},
         {data: 'alamat', name: 'alamat'},
         {data: 'kompetensi', name: 'kompetensi'},
+        {data: 'jumlah_kelompok', name: 'jumlah_kelompok', orderable: false, searchable: false},
         ],
         "columnDefs": [
             {
