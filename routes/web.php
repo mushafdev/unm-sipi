@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth']], function () {
     // LokasiPi
     Route::get('lokasi-pi/get-lokasi-pi', [LokasiPiController::class, 'get_lokasi_pi'])->name('lokasi-pi.get_lokasi_pi');
     Route::get('lokasi-pi/get-data', [LokasiPiController::class, 'get_data'])->name('lokasi-pi.get_data');
+    Route::get('lokasi-pi/get-kelompok', [LokasiPiController::class, 'get_kelompok'])->name('lokasi-pi.get_kelompok');
     // End LokasiPi
 
     // Logbook
@@ -147,6 +148,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Dosen
     Route::get('dosen/get-dosen', [DosenController::class, 'get_dosen'])->name('dosen.get_dosen');
     Route::get('dosen/get-data', [DosenController::class, 'get_data'])->name('dosen.get_data');
+    Route::get('dosen/get-kelompok', [DosenController::class, 'get_kelompok'])->name('dosen.get_kelompok');
     Route::resource('dosen', DosenController::class)->except([
         'show','edit','create','update'
     ]);

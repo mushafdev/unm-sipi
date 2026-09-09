@@ -27,7 +27,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table" id="table" data-list="{{route('dosen.get_dosen')}}" data-url="{{route('dosen.index')}}">
+                    <table class="table" id="table" data-list="{{route('dosen.get_dosen')}}" data-url="{{route('dosen.index')}}" data-kelompok="{{route('dosen.get_kelompok')}}">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -149,5 +149,34 @@
     </div>
 </div>
 
-<script src="{{asset('app/assets/pages/dosen/dosen_list.js')}}?v=2"></script>
+<div class="modal fade text-left" id="modal-kelompok" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Kelompok Bimbingan Sementara PI <span id="modal-kelompok-nama" class="text-primary"></span></h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted"><i class="bi bi-info-circle"></i> Klik salah satu kelompok untuk membuka detailnya di tab baru.</p>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Anggota</th>
+                                <th>Lokasi PI</th>
+                                <th class="text-center">Tahun</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-kelompok-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{asset('app/assets/pages/dosen/dosen_list.js')}}?v=3"></script>
 @endsection

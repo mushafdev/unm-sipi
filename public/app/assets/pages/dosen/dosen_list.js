@@ -50,6 +50,50 @@ table = $('#table').DataTable({
 });
 
 
+var urlKelompok = $('#table').data('kelompok');
+
+$(document).on('click', '.lihat-kelompok', function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    var nama = $(this).data('nama');
+    $('#modal-kelompok-nama').text(nama ? '- ' + nama : '');
+    $('#modal-kelompok-body').html('<tr><td colspan="4" class="text-center">Memuat...</td></tr>');
+    $('#modal-kelompok').modal('show');
+
+    $.ajax({
+        type: 'GET',
+        url: urlKelompok,
+        data: { id: id },
+        dataType: 'json',
+        success: function (res) {
+            var rows = '';
+            if (res.data.length === 0) {
+                rows = '<tr><td colspan="4" class="text-center text-danger">Tidak ada kelompok</td></tr>';
+            } else {
+                $.each(res.data, function (i, k) {
+                    rows += '<tr class="row-kelompok" style="cursor:pointer" data-url="' + k.url + '">'
+                        + '<td>' + (i + 1) + '</td>'
+                        + '<td>' + k.anggota + '</td>'
+                        + '<td>' + k.lokasi + '</td>'
+                        + '<td class="text-center">' + k.tahun + '</td>'
+                        + '</tr>';
+                });
+            }
+            $('#modal-kelompok-body').html(rows);
+        },
+        error: function () {
+            $('#modal-kelompok-body').html('<tr><td colspan="4" class="text-center text-danger">Gagal memuat data</td></tr>');
+        }
+    });
+});
+
+$(document).on('click', '.row-kelompok', function () {
+    var url = $(this).data('url');
+    if (url) {
+        window.open(url, '_blank');
+    }
+});
+
 $('#add').on('click',function(e){
     e.preventDefault();
     $('#form').parsley().reset();

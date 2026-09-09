@@ -5,6 +5,7 @@ namespace App\Http\Controllers\a;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
+use App\Models\Group;
 use App\Models\Jurusan;
 use App\Models\Prodi;
 use App\Models\Fakultas;
@@ -83,7 +84,10 @@ class DosenController extends Controller implements HasMiddleware
                         return encrypt0($row->id);
                     })
                     ->addColumn('jumlah_kelompok', function($row){
-                        return '<span class="badge bg-primary">'.$row->jumlah_kelompok.' Kelompok</span>';
+                        if($row->jumlah_kelompok > 0){
+                            return '<a href="#" class="badge bg-primary lihat-kelompok" style="cursor:pointer" data-id="'.encrypt0($row->id).'" data-nama="'.e($row->nama).'">'.$row->jumlah_kelompok.' Kelompok</a>';
+                        }
+                        return '<span class="badge bg-secondary">0 Kelompok</span>';
                     })
 
                     ->rawColumns(['action','aktif','user_photo','role','jumlah_kelompok'])
@@ -100,6 +104,39 @@ class DosenController extends Controller implements HasMiddleware
             'id' => encrypt0($q->id),
             'result' => $q,
         ]);
+    }
+
+    public function get_kelompok(Request $request)
+    {
+        $id = decrypt0($request->id);
+        $groups = Group::leftJoin('lokasi_pis', 'lokasi_pis.id', '=', 'groups.lokasi_pi_id')
+            ->where('groups.pembimbing_id', $id)
+            ->where('groups.admin_verify', 'Y')
+            ->where('groups.done_verify', '!=', 'Y')
+            ->select('groups.*', 'lokasi_pis.lokasi_pi')
+            ->orderBy('groups.year', 'desc')
+            ->get();
+
+        $data = $groups->map(function ($g) {
+            $members = DB::table('group_details')
+                ->join('mahasiswas', 'mahasiswas.id', '=', 'group_details.mahasiswa_id')
+                ->where('group_details.group_id', $g->id)
+                ->select('mahasiswas.nama', 'mahasiswas.nim')
+                ->get();
+            $anggota = $members->map(function ($m) {
+                return $m->nama . ' (' . $m->nim . ')';
+            })->implode(', ');
+
+            return [
+                'url'     => route('group.show', encrypt0($g->id)),
+                'anggota' => $anggota != '' ? $anggota : '-',
+                'jumlah'  => $members->count(),
+                'lokasi'  => $g->lokasi_pi ?? '-',
+                'tahun'   => $g->year,
+            ];
+        });
+
+        return response()->json(['data' => $data]);
     }
 
     /**
