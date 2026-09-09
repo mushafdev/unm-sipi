@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\u\LoginController;
 use \App\Http\Controllers\u\UDashboardController;
