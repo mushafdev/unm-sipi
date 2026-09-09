@@ -41,4 +41,4 @@
     </div>
 </div>
 
-<script src="{{asset('app/assets/pages/component/lokasi_pi.js')}}"></script>
+<script src="{{asset('app/assets/pages/component/lokasi_pi.js')}}?v=12"></script>

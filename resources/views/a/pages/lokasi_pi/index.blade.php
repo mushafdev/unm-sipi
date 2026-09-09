@@ -59,5 +59,5 @@
     </section>
 </div>
 
-<script src="{{asset('app/assets/pages/lokasi_pi/lokasi_pi_list.js')}}"></script>
+<script src="{{asset('app/assets/pages/lokasi_pi/lokasi_pi_list.js')}}?v=12"></script>
 @endsection
