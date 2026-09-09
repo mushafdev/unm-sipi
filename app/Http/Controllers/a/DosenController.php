@@ -46,6 +46,7 @@ class DosenController extends Controller implements HasMiddleware
             leftJoin('prodis','prodis.id','=','dosens.prodi_id')
             ->leftJoin('jurusans','jurusans.id','=','prodis.jurusan_id')
             ->select('dosens.*','prodis.prodi','jurusans.jurusan')
+            ->selectRaw('(SELECT COUNT(*) FROM `groups` WHERE `groups`.pembimbing_id = dosens.id AND `groups`.admin_verify = "Y" AND `groups`.done_verify != "Y") as jumlah_kelompok')
             ->orderBy('dosens.created_at','desc')->get();
             return Datatables::of($data)
                     ->addIndexColumn()
@@ -78,11 +79,14 @@ class DosenController extends Controller implements HasMiddleware
                         return $aktif;
                     })
                     ->addColumn('id_enc', function($row){
-                        
+
                         return encrypt0($row->id);
                     })
+                    ->addColumn('jumlah_kelompok', function($row){
+                        return '<span class="badge bg-primary">'.$row->jumlah_kelompok.' Kelompok</span>';
+                    })
 
-                    ->rawColumns(['action','aktif','user_photo','role'])
+                    ->rawColumns(['action','aktif','user_photo','role','jumlah_kelompok'])
                     ->make(true);
         }
     }

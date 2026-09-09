@@ -38,6 +38,7 @@
                                 <th>Jabatan</th>
                                 <th>Prodi</th>
                                 <th>Jurusan</th>
+                                <th>Kelompok Sementara PI</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -148,5 +149,5 @@
     </div>
 </div>
 
-<script src="{{asset('app/assets/pages/dosen/dosen_list.js')}}"></script>
+<script src="{{asset('app/assets/pages/dosen/dosen_list.js')}}?v=2"></script>
 @endsection
