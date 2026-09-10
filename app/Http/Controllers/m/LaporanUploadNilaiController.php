@@ -74,7 +74,7 @@ class LaporanUploadNIlaiController extends Controller
         $request->validate([
             'group_id' => 'required',
             'dokumen' => 'required|string',
-            'file' => 'required|file|mimes:pdf|max:5120',
+            'file' => 'required|file|mimes:pdf|max:8120',
         ]);
         $group_id = decrypt0($request->group_id);
 
